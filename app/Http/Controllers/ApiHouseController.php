@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\JsonApi;
 use App\Models\Person;
+use App\Models\ActionLog;
 
 class ApiHouseController extends Controller
 {
@@ -103,5 +104,16 @@ class ApiHouseController extends Controller
         return response()->json([ 'errors' => [
                 [ 'title' => $message ]
             ]], 422);
+    }
+
+    public function log($area, $event, $message, $data=null, $targetPersonId=null) {
+        ActionLog::record(
+            ($this->user ? $this->user->id : null),
+            $area,
+            $event,
+            $message,
+            $data,
+            $targetPersonId
+        );
     }
 }

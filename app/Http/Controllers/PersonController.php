@@ -76,6 +76,8 @@ class PersonController extends ApiHouseController
             PersonLanguage::updateForPerson($id, $person->languages);
         }
 
+        $this->log('person', 'update', 'Information updated');
+
         return $this->success($person);
     }
 
@@ -89,6 +91,7 @@ class PersonController extends ApiHouseController
     {
         $person = $this->findPerson($id);
         $this->authorize('delete', $person);
+        $this->log('person', 'delete', 'Person deletedd');
     }
 
     /*
@@ -111,10 +114,8 @@ class PersonController extends ApiHouseController
      * Change password
      */
 
-    public function password(Request $request, $id)
+    public function password(Request $request, Person $person)
     {
-        $person = $this->findPerson($id);
-
         $this->authorize('password', $person);
 
         // Require the old password if person == user
@@ -137,6 +138,7 @@ class PersonController extends ApiHouseController
             return $this->validationError('The old password does not match.');
         }
 
+        $this->log('person', 'password', 'Password changed', null, $person->id);
         $person->changePassword($passwords['password']);
 
         return $this->success();

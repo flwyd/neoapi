@@ -8,6 +8,7 @@ use App\Http\Controllers\ApihouseController;
 use App\Models\Schedule;
 use App\Models\Person;
 use App\Models\Role;
+use App\Models\Slot;
 
 class PersonScheduleController extends ApihouseController
 {
@@ -36,11 +37,17 @@ class PersonScheduleController extends ApihouseController
              'slot_id'  => 'required|integer',
          ]);
 
+         $slotId = $data['slot_id'];
          $force = $this->userHasRole([Role::ADMIN, Role::MANAGE]);
 
-         $result = Schedule::addToSchedule($person->id, $data['slot_id'], $force);
+         $result = Schedule::addToSchedule($person->id, $slotId, $force);
 
          if ($result['status'] == 'success') {
+             $slot = Slot::find($slotId);
+             $this->log('person-slot', 'add',
+                    "Slot added to schedule {$slot->begins}: {$slot->description}",
+                    [ 'slot_id' => $slotId],
+                    $person->id);
              return response()->json($result);
          } else {
              return response()->json($result, 422);
@@ -55,9 +62,16 @@ class PersonScheduleController extends ApihouseController
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy(Person $person, $personSlotId)
+    public function destroy(Person $person, $slotId)
     {
-        $result = Schedule::deleteFromSchedule($person->id, $personSlotId);
+        $result = Schedule::deleteFromSchedule($person->id, $slotId);
+        if ($result['status'] == 'success') {
+            $slot = Slot::find($slotId);
+            $this->log('person-slot', 'remove',
+                    "Slot removed from schedule {$slot->begins}: {$slot->description}",
+                    [ 'slot_id' => $slotId],
+                    $person->id);
+        }
         return response()->json($result);
     }
 }

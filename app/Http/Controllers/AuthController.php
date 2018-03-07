@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Person;
 use App\Models\Role;
+use App\Models\ActionLog;
 use App\Http\JsonApi;
 use App\Mail\ResetPassword;
 
@@ -35,20 +36,29 @@ class AuthController extends Controller
             'password'       => 'required',
         ]);
 
+        $actionData = [
+            'ip'    => request()->ip(),
+            'user_agent'    => request()->userAgent(),
+        ];
+
         $person = Person::findForAuthentication($credentials);
 
         if (!$person) {
+            ActionLog::record(null, 'auth', 'failed', 'Password incorrect', $actionData);
             return JsonApi::errorResponse(response(), 401, 'The email and/or password is incorrect.');
         }
 
         if ($person->user_authorized == false) {
+            ActionLog::record($person, 'auth', 'failed', 'Account disabled', $actionData);
             return JsonApi::errorResponse(response(), 403, 'The account has been disabled.');
         }
 
         if (!$person->hasRole(Role::LOGIN)) {
+            ActionLog::record($person, 'auth', 'failed', 'Login disabled', $actionData);
             return JsonApi::errorResponse(response(), 403, 'The account is temporarily disabled from using the Clubhouse.');
         }
 
+        ActionLog::record($person->id, 'auth', 'login', 'Person logged in.', $actionData);
         return $this->respondWithToken(auth()->login($person), $person);
     }
 
