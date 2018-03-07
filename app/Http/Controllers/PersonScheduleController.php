@@ -36,11 +36,7 @@ class PersonScheduleController extends ApihouseController
              'slot_id'  => 'required|integer',
          ]);
 
-         if ($this->userHasRole([Role::ADMIN, Role::MANAGE])) {
-             $force = true;
-         } else {
-             $force = false;
-         }
+         $force = $this->userHasRole([Role::ADMIN, Role::MANAGE]);
 
          $result = Schedule::addToSchedule($person->id, $data['slot_id'], $force);
 
@@ -61,7 +57,7 @@ class PersonScheduleController extends ApihouseController
 
     public function destroy(Person $person, $personSlotId)
     {
-        Schedule::deleteFromSchedule($person->id, $personSlotId);
-        return $this->deleteSuccess();
+        $result = Schedule::deleteFromSchedule($person->id, $personSlotId);
+        return response()->json($result);
     }
 }

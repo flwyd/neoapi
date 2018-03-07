@@ -41,7 +41,7 @@ class PersonMessage extends ApihouseModel
         'timestamp' => 'timestamp'
     ];
 
-    protected $rules = [
+    protected $saveRules = [
         'subject'   => 'required',
         'body'      => 'required',
         'recipient_callsign'    => 'required'

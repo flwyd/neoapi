@@ -7,8 +7,12 @@ use Illuminate\Validation\Factory as Validator;
 use App\Http\JsonApi\SerializeRecord;
 use App\Http\JsonApi\DeserializeRecord;
 
-abstract class ApihouseModel extends Model
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+
+abstract class ApihouseModel extends Model implements AuditableContract
 {
+    use Auditable;
 
     /**
      * Don't use created_at/updated_at.
@@ -19,6 +23,8 @@ abstract class ApihouseModel extends Model
     protected $errors;
 
     protected $rules;
+    protected $saveRules;
+    protected $updateRules;
 
     protected $results;
 
@@ -38,7 +44,14 @@ abstract class ApihouseModel extends Model
 
     public function validate($rules = null) {
         if ($rules === null) {
-            $rules = $this->rules;
+            if ($this->exists) {
+                $rules = $this->updateRules;
+            } else {
+                $rules = $this->saveRules;
+            }
+
+            if ($rules === null)
+                $rules = $this->rules;
         }
 
         if (empty($rules))

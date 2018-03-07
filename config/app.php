@@ -160,6 +160,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Database audit trail
+        OwenIt\Auditing\AuditingServiceProvider::class,
     ],
 
     /*

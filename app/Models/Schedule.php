@@ -177,7 +177,7 @@ class Schedule extends ApihouseModel
     //
     //
 
-    public static function deleteFromSchedule($personId, $personSlotId):bool
+    public static function deleteFromSchedule($personId, $personSlotId): array
     {
 
         $personSlot = PersonSlot::where([
@@ -197,10 +197,10 @@ class Schedule extends ApihouseModel
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            return false;
+            throw $e;
         }
 
-        return true;
+        return [ 'status' => 'success', 'signed_up' => $slot->signed_up ];
     }
 
     public function getHasStartedAttribute()
