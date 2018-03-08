@@ -23,6 +23,9 @@ class ApiHouseController extends Controller
 
     public function isUser($person): bool
     {
+        if (!$this->user)
+            return false;
+
         return is_numeric($person) ? $this->user->id == $person : $this->user->id == $person->id;
     }
 

@@ -34,6 +34,9 @@ Route::group([
 Route::group([
     'middleware' => 'api',
 ], function ($router) {
+
+    Route::get('callsigns', 'CallsignsController@index');
+
     Route::resource('timesheet', 'TimesheetController');
     Route::get('slot/{slot}/people', 'SlotController@people');
     Route::resource('slot', 'SlotController');

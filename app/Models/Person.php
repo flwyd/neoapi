@@ -174,6 +174,24 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
         return self::where('email', $email)->firstOrFail();
     }
 
+    /*
+     * Search for matching callsigns
+     *
+     * @param string $query string to match against callsigns
+     * @return array person id & callsigns which match
+     */
+
+    public static function searchCallsigns($query, $active)
+    {
+        $sql = self::where('callsign', 'like', '%'.$query.'%');
+
+        if ($active) {
+            $sql = $sql->whereIn('status', [ 'active', 'vintage', 'alpha']);
+        }
+
+        return $sql->limit(10)->get(['id', 'callsign']);
+    }
+
     public function isValidPassword(string $password): bool
     {
         if (self::passwordMatch($this->password, $password)) {
