@@ -33,10 +33,12 @@ class PersonMessage extends ApihouseModel
     ];
 
     protected $appends = [
+        'creator_person_id',
         'creator_callsign',
         'sender_person_id',
-        'sender_callsign',
+        'message_from',
         'delivered',
+        'sent_at'
     ];
 
     public $recipient_callsign;
@@ -114,4 +116,13 @@ class PersonMessage extends ApihouseModel
          $this->delivered = true;
          return $this->saveWithoutValidation();
      }
+
+     /*
+      * Timestamp is in UTC, need to send back back with the right
+      * format with timezone offset.
+      */
+
+      public function getSentAtAttribute() {
+          return $this->timestamp->toIso8601String();
+      }
 }

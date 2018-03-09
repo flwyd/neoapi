@@ -62,8 +62,8 @@ class SerializeRecord {
 
         foreach ($columns as $column) {
             $value = $this->record->$column;
-            if (gettype($value) == 'object' && method_exists($value, 'toDateTimeString')) {
-                $value = $value->toDateTimeString();
+            if (gettype($value) == 'object' && method_exists($value, 'toRfc3339String')) {
+                $value = $value->toIso8601String();
             }
             $attributes[JsonApi::jsonName($column)] = $value;
         }
