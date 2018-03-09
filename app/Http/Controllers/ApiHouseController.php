@@ -89,7 +89,7 @@ class ApiHouseController extends Controller
             return JsonApi::successResponse(response(), $record);
         }
 
-        return response()->json([]);
+        return response()->json([ 'status' => 'success' ]);
     }
 
     public function deleteSuccess()
@@ -102,7 +102,7 @@ class ApiHouseController extends Controller
         return response()->json((new DeserializeRecord($record))->toErrorJsonApi(), 422);
     }
 
-    public function validationError($message)
+    public function jsonError($message)
     {
         return response()->json([ 'errors' => [
                 [ 'title' => $message ]

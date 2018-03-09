@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApihouseController;
 use App\Models\Person;
 use App\Models\PersonMessage;
+use App\Models\Role;
 
 class PersonMessageController extends ApihouseController
 {
@@ -14,9 +15,14 @@ class PersonMessageController extends ApihouseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($personId)
+
+    public function index(Request $request)
     {
-        return $this->jsonApi(PersonMessage::findForPerson($personId), false);
+        $query = request()->validate([
+            'person_id' => 'required|integer',
+        ]);
+
+        return $this->jsonApi(PersonMessage::findForPerson($query['person_id']), false);
     }
 
     /**
@@ -27,7 +33,25 @@ class PersonMessageController extends ApihouseController
      */
     public function store(Request $request)
     {
-        //
+        $message = PersonMessage::fromJsonApi($request);
+
+        // Message created by logged in user
+        $message->creator_person_id = $this->user->id;
+
+        // Override message_from if user does not appropriate privileges
+        if (!$this->userHasRole([ Role::ADMIN, Role::MANAGE])) {
+            $message->sender_callsign = $this->user->callsign;
+        }
+
+        if (!$message->validate()) {
+            return $this->errorJsonApi($message);
+        }
+
+        if ($message->save()) {
+            return $this->jsonApi($message);
+        }
+
+        return $this->errorJsonApi($message);
     }
 
     /**
@@ -36,7 +60,7 @@ class PersonMessageController extends ApihouseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(PersonMessage $message)
     {
         //
     }
@@ -48,7 +72,7 @@ class PersonMessageController extends ApihouseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PersonMessage $message)
     {
         //
     }
@@ -59,8 +83,25 @@ class PersonMessageController extends ApihouseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(PersonMessage $message)
     {
         //
     }
+
+    /**
+     * Mark message as read.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function markread(PersonMessage $person_message)
+    {
+        if (!$person_message->markRead()) {
+            return $this->jsonError('Cannot mark message as read');
+        }
+
+        return $this->success();
+    }
+
 }

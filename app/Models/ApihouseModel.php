@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Factory as Validator;
+
 use App\Http\JsonApi\SerializeRecord;
 use App\Http\JsonApi\DeserializeRecord;
 
@@ -23,8 +25,8 @@ abstract class ApihouseModel extends Model implements AuditableContract
     protected $errors;
 
     protected $rules;
-    protected $saveRules;
     protected $updateRules;
+    protected $createRules;
 
     protected $results;
 
@@ -47,7 +49,7 @@ abstract class ApihouseModel extends Model implements AuditableContract
             if ($this->exists) {
                 $rules = $this->updateRules;
             } else {
-                $rules = $this->saveRules;
+                $rules = $this->createRules;
             }
 
             if ($rules === null)
@@ -79,12 +81,29 @@ abstract class ApihouseModel extends Model implements AuditableContract
         return parent::save($options);
     }
 
+    public function saveWithoutValidation($options = []) {
+        if (!$this->isDirty()) {
+            error_log("is not dirty");
+            return true;
+        }
+
+        return parent::save($options);
+    }
+
     public function getResults() {
         return $this->results;
     }
 
     public function getErrors() {
         return $this->errors;
+    }
+
+    public function addError(string $column, string $messsage):void {
+        if (!$this->errors) {
+            $this->errors = new MessageBag();
+        }
+
+        $this->errors->add($column, $message);
     }
 
     public function getRules() {

@@ -135,7 +135,7 @@ class PersonController extends ApiHouseController
         $passwords = $request->validate($rules);
 
         if ($requireOld && !$person->isValidPassword($passwords['password_old'])) {
-            return $this->validationError('The old password does not match.');
+            return $this->jsonError('The old password does not match.');
         }
 
         $this->log('person', 'password', 'Password changed', null, $person->id);

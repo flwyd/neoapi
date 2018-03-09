@@ -38,12 +38,16 @@ Route::group([
     Route::get('callsigns', 'CallsignsController@index');
 
     Route::resource('timesheet', 'TimesheetController');
+
     Route::get('slot/{slot}/people', 'SlotController@people');
     Route::resource('slot', 'SlotController');
 
+    Route::patch('messages/{person_message}/markread', 'PersonMessageController@markread');
+    Route::resource('messages', 'PersonMessageController', [ 'only' => [ 'index', 'store', 'destroy' ]]);
+
     Route::resource('person/{person}/schedule', 'PersonScheduleController', [ 'only' => [ 'index', 'store', 'destroy' ]]);
-    Route::resource('person/{id}/messages', 'PersonMessageController');
     Route::patch('person/{person}/password', 'PersonController@password');
     Route::get('person/{person}/yearinfo', 'PersonController@yearInfo');
     Route::resource('person', 'PersonController', [ 'only' => [ 'index','show','store','update','destroy' ]]);
+
 });

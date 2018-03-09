@@ -69,8 +69,8 @@ class Handler extends ExceptionHandler
             }
 
             if ($e instanceof \Illuminate\Validation\ValidationException) {
-                error_log("Validation error");
-                return JsonApi::errorResponse(response(), 400, $e->response['messages']);
+                error_log("Validation error [".json_encode($e->errors())."]");
+                return JsonApi::errorResponse(response(), 422, $e->getResponse());
             }
 
             if ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {

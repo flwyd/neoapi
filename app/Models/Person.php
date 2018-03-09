@@ -174,6 +174,11 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
         return self::where('email', $email)->firstOrFail();
     }
 
+    public static function findByCallsign(string $callsign)
+    {
+        return self::where('callsign', $callsign)->first();
+    }
+
     /*
      * Search for matching callsigns
      *
