@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Authenticatable;
@@ -117,16 +118,19 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
 
         // 'meta' objects
        'languages',
-       'unread_message_count',
-       'years_rangered',
-       'roles'
+    ];
+
+    protected $appends = [
+        'unread_message_count',
+        'years_rangered',
+        'roles'
     ];
 
     /*
      * The years rangered (computed)
      * @var number
      */
-    public $years_rangered;
+        public $years_rangered;
 
     /*
      * Unread message count (computed)
@@ -188,7 +192,7 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
 
     public static function searchCallsigns($query, $active)
     {
-        $sql = self::where('callsign', 'like', '%'.$query.'%');
+        $sql = DB::table('person')->where('callsign', 'like', '%'.$query.'%');
 
         if ($active) {
             $sql = $sql->whereIn('status', [ 'active', 'vintage', 'alpha']);

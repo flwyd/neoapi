@@ -46,7 +46,6 @@ class PersonFilter
     ];
 
     const META_FIELDS = [
-        'languages',
         'unread_message_count',
         'years_rangered',
     ];
@@ -74,6 +73,8 @@ class PersonFilter
 
         'longsleeveshirt_size_style',
         'teeshirt_size_style',
+
+        'languages'
     ];
 
     const EMERGENCY_CONTACT_FIELDS = [

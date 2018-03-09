@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\JsonApi;
 use App\Models\Person;
 use App\Models\ActionLog;
+use App\Http\JsonApi\SerializeRecord;
 
 class ApiHouseController extends Controller
 {
@@ -99,7 +100,7 @@ class ApiHouseController extends Controller
 
     public function errorJsonApi($record)
     {
-        return response()->json((new DeserializeRecord($record))->toErrorJsonApi(), 422);
+        return response()->json((new SerializeRecord($record))->toErrorJsonApi(), 422);
     }
 
     public function jsonError($message)

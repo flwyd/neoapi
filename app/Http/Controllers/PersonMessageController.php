@@ -33,25 +33,22 @@ class PersonMessageController extends ApihouseController
      */
     public function store(Request $request)
     {
-        $message = PersonMessage::fromJsonApi($request);
+        $person_message = new PersonMessage;
+        $person_message->fromJsonApi($request);
 
         // Message created by logged in user
-        $message->creator_person_id = $this->user->id;
+        $person_message->creator_person_id = $this->user->id;
 
         // Override message_from if user does not appropriate privileges
         if (!$this->userHasRole([ Role::ADMIN, Role::MANAGE])) {
-            $message->sender_callsign = $this->user->callsign;
+            $person_message->message_from = $this->user->callsign;
         }
 
-        if (!$message->validate()) {
-            return $this->errorJsonApi($message);
+        if ($person_message->save()) {
+            return $this->success($person_message);
         }
 
-        if ($message->save()) {
-            return $this->jsonApi($message);
-        }
-
-        return $this->errorJsonApi($message);
+        return $this->errorJsonApi($person_message);
     }
 
     /**

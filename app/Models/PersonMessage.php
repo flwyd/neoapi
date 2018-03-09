@@ -16,12 +16,6 @@ class PersonMessage extends ApihouseModel
     protected $table = 'person_message';
 
     /*
-     * To make some sense of the person_message table, some
-     * columns are remapped to saner names.
-     *
-     *  sender_callsign -> message_from
-     *  sent_at -> timestamp
-     *
      * The following are readonly fields returned for queries:
      * creator_callsign: person.callsign looked up from creator_person_id
      * sender_person_id: person.id looked up from message_from
@@ -33,24 +27,20 @@ class PersonMessage extends ApihouseModel
 
     protected $fillable = [
         'recipient_callsign',
-        'sender_callsign',
+        'message_from',
         'subject',
         'body',
     ];
 
-    protected $results = [
-        'person_id',
+    protected $appends = [
         'creator_callsign',
-        'creator_person_id',
         'sender_person_id',
         'sender_callsign',
-        'subject',
-        'body',
         'delivered',
-        'sent_at',
     ];
 
     public $recipient_callsign;
+    public $sender_callsign;
 
     protected $casts = [
         'delivered' => 'bool',
@@ -59,7 +49,7 @@ class PersonMessage extends ApihouseModel
 
     protected $createRules = [
         'recipient_callsign'    => 'required',
-        'sender_callsign'       => 'required',
+        'message_from'          => 'required',
         'subject'               => 'required',
         'body'                  => 'required',
     ];
@@ -77,17 +67,6 @@ class PersonMessage extends ApihouseModel
         return PersonMessage::where('person_id', $personId)->where('delivered', false)->count();
     }
 
-    public function getSentAtAttribute() {
-        return $this->timestamp;
-    }
-
-    public function getSenderCallsignAttribute() {
-        return $this->message_from;
-    }
-
-    public function setSenderCallsignAttribute($value) {
-        $this->message_from = $value;
-    }
 
     /*
      * validate does triple duty here.
@@ -106,7 +85,7 @@ class PersonMessage extends ApihouseModel
 
         /* Find callsigns and verify contents */
 
-        $recipient = Person::findCallsign($this->recipient_callsign);
+        $recipient = Person::findByCallsign($this->recipient_callsign);
 
         if (!$recipient) {
             $this->addError('recipient_callsign', 'Callsign does not exist');
@@ -116,14 +95,14 @@ class PersonMessage extends ApihouseModel
         $this->person_id = $recipient->id;
 
         /* And make sure sender exists */
-        $sender = Person::findCallsign($this->sender_callsign);
+        $sender = Person::findByCallsign($this->message_from);
 
         if (!$sender) {
             $this->addError('sender_callsign', 'Callsign does not exist');
             return false;
         }
 
-        $this->sender_callsign = $sender->callsign;
+        $this->message_from = $sender->callsign;
         return true;
     }
 

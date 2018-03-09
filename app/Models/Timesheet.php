@@ -25,12 +25,7 @@ class Timesheet extends ApihouseModel
         'off_duty',
     ];
 
-    protected $results = [
-        'person_id',
-        'position_id',
-        'position_title',
-        'on_duty',
-        'off_duty',
+    protected $appends = [
         'duration',
         'credits',
         'past_start_time',

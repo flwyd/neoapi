@@ -39,16 +39,22 @@ class SerializeRecord {
             $modelFilter = "\\App\\Http\\Filters\\".$modelName."Filter";
             $columns = (new $modelFilter($this->record))->serializerFilter($authorizedUser);
         } else {
-            $columns = $this->record->getResults();
+            $appends = $this->record->getAppends();
+            $fillable = $this->record->getFillable();
 
-            if (empty($columns)) {
-                // Use the fillables if present
-                $columns = $this->record->getFillable();
-            }
-
-            if (empty($columns)) {
-                // Use the actual set attributes if results & fillables was empty
+            if (empty($appends) && empty($fillable)) {
+                // Use the actual set attributes if appends & fillables are empty
                 $columns = array_keys($this->record->getAttributes());
+            } else {
+                if ($fillable) {
+                    $columns = $fillable;
+                } else {
+                    $columns = [];
+                }
+
+                if ($appends) {
+                    $columns = array_merge($columns, $appends);
+                }
             }
         }
 

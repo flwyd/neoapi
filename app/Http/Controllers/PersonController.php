@@ -71,7 +71,11 @@ class PersonController extends ApiHouseController
 
         $person->fromJsonApi(request(), $this->user);
 
-        $person->save();
+        if (!$person->save()) {
+            return $this->errorJsonApi($person);
+        }
+
+        error_log("PERSON LANGUAGE ".json_encode($person->languages));
         if ($person->languages !== null) {
             PersonLanguage::updateForPerson($id, $person->languages);
         }

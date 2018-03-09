@@ -28,8 +28,6 @@ abstract class ApihouseModel extends Model implements AuditableContract
     protected $updateRules;
     protected $createRules;
 
-    protected $results;
-
     public function toJsonApi($authorizedUser = null)
     {
         return (new SerializeRecord($this))->toJsonApi($authorizedUser);
@@ -59,7 +57,16 @@ abstract class ApihouseModel extends Model implements AuditableContract
         if (empty($rules))
             return true;
 
-        $validator = \Validator::make($this->getAttributes(), $rules);
+        if ($this->fillable) {
+            $attributes = [];
+            foreach ($this->fillable as $column) {
+                $attributes[$column] = $this->$column;
+            }
+        } else {
+            $attributes = $this->getAttributes();
+        }
+
+        $validator = \Validator::make($attributes, $rules);
 
         if ($validator->fails()) {
             $this->errors = $validator->errors();
@@ -108,5 +115,10 @@ abstract class ApihouseModel extends Model implements AuditableContract
 
     public function getRules() {
         return $this->rules;
+    }
+
+    // Laravel does not have this!?
+    public function getAppends() {
+        return $this->appends;
     }
 }

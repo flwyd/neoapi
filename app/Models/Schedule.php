@@ -17,7 +17,7 @@ class ScheduleException extends \Exception { };
 class Schedule extends ApihouseModel
 {
 
-    protected $results = [
+    protected $appends = [
         'position_id',
         'position_title',
         'position_type',
