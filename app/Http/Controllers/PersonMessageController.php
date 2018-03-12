@@ -22,7 +22,11 @@ class PersonMessageController extends ApihouseController
             'person_id' => 'required|integer',
         ]);
 
-        return $this->jsonApi(PersonMessage::findForPerson($query['person_id']), false);
+        $personId = $query['person_id'];
+
+        $this->authorize('index', [PersonMessage::class, $personId ]);
+
+        return $this->jsonApi(PersonMessage::findForPerson($personId), false);
     }
 
     /**
@@ -52,37 +56,17 @@ class PersonMessageController extends ApihouseController
     }
 
     /**
-     * Display the specified resource.
+     *  Delete a message
      *
-     * @param  int  $id
+     * @param  PersonMessage $person_message the message to delete
      * @return \Illuminate\Http\Response
      */
-    public function show(PersonMessage $message)
+    public function destroy(PersonMessage $person_message)
     {
-        //
-    }
+        $this->authorize('delete', $person_message);
+        $person_message->delete();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(PersonMessage $message)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(PersonMessage $message)
-    {
-        //
+        return $this->deleteSuccess();
     }
 
     /**
@@ -94,6 +78,8 @@ class PersonMessageController extends ApihouseController
 
     public function markread(PersonMessage $person_message)
     {
+        $this->authorize('markread', $person_message);
+
         if (!$person_message->markRead()) {
             return $this->jsonError('Cannot mark message as read');
         }

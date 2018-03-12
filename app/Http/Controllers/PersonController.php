@@ -45,14 +45,14 @@ class PersonController extends ApiHouseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Person $person)
     {
-        $person = $this->findPerson($id);
+        $personId = $person->id;
         $person->retrieveRoles();
 
-        $person->years_rangered = Timesheet::yearsRangered($id);
-        $person->unread_message_count = PersonMessage::countUnread($id);
-        $person->languages = PersonLanguage::retrieveForPerson($id);
+        $person->years_rangered = Timesheet::yearsRangered($personId);
+        $person->unread_message_count = PersonMessage::countUnread($personId);
+        $person->languages = PersonLanguage::retrieveForPerson($personId);
 
         return $this->jsonApi($person);
     }
@@ -64,9 +64,8 @@ class PersonController extends ApiHouseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Person $person)
     {
-        $person = $this->findPerson($id);
         $this->authorize('update', $person);
 
         $person->fromJsonApi(request(), $this->user);
@@ -91,7 +90,7 @@ class PersonController extends ApiHouseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Person $person)
     {
         $person = $this->findPerson($id);
         $this->authorize('delete', $person);
@@ -103,10 +102,10 @@ class PersonController extends ApiHouseController
      * for a given year.
      */
 
-    public function yearInfo($id)
+    public function yearInfo(Person $person)
     {
         $year = $this->getYear();
-        $yearInfo = PersonYearInfo::findForPersonYear($id, $year);
+        $yearInfo = PersonYearInfo::findForPersonYear($person->id, $year);
         if ($yearInfo) {
             return $this->toJson([ 'year_info' => $yearInfo->toJson()]);
         }

@@ -26,6 +26,7 @@ class Timesheet extends ApihouseModel
     ];
 
     protected $appends = [
+        'position_title',
         'duration',
         'credits',
         'past_start_time',

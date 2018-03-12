@@ -121,8 +121,8 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
     ];
 
     protected $appends = [
-        'unread_message_count',
         'years_rangered',
+        'unread_message_count',
         'roles'
     ];
 
@@ -257,6 +257,10 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
         return false;
     }
 
+    public function getRolesAttribute() {
+        return $this->roles;
+    }
+
     public function retrieveRoles(): void
     {
         $this->roles = PersonRole::retrieveForPerson($this->id);
@@ -334,5 +338,17 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
         }
 
         return $token;
+    }
+
+    public function getUnreadMessageCountAttribute() {
+        return $this->unread_message_count;
+    }
+
+    public function getLanguagesAttribute() {
+        return $this->languages;
+    }
+
+    public function getYearsRangeredAttribute() {
+        return $this->years_rangered;
     }
 }

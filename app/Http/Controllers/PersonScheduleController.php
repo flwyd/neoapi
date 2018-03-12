@@ -17,14 +17,16 @@ class PersonScheduleController extends ApihouseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $personId)
+    public function index(Person $person)
     {
-        $query = $request->validate([
+        $this->authorize('index', [ Schedule::class, $person]);
+
+        $query = request()->validate([
             'year'    => 'required|digits:4',
             'signups' => 'boolean',
         ]);
 
-        $query['person_id'] = $personId;
+        $query['person_id'] = $person->id;
         return $this->jsonApi(Schedule::findForQuery($query), false);
     }
 
@@ -36,6 +38,8 @@ class PersonScheduleController extends ApihouseController
          $data = request()->validate([
              'slot_id'  => 'required|integer',
          ]);
+
+         $this->authorize('create', [ Schedule::class, $person ]);
 
          $slotId = $data['slot_id'];
          $force = $this->userHasRole([Role::ADMIN, Role::MANAGE]);
@@ -64,6 +68,8 @@ class PersonScheduleController extends ApihouseController
 
     public function destroy(Person $person, $slotId)
     {
+        $this->authorize('delete', [ Schedule::class, $person ]);
+
         $result = Schedule::deleteFromSchedule($person->id, $slotId);
         if ($result['status'] == 'success') {
             $slot = Slot::find($slotId);

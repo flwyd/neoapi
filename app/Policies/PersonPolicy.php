@@ -11,6 +11,13 @@ class PersonPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user)
+    {
+        if ($user->hasRole(Role::ADMIN)) {
+            return true;
+        }
+    }
+
     /**
      * Determine whether the user can view the person.
      *
@@ -31,7 +38,7 @@ class PersonPolicy
      */
     public function create(Person $user)
     {
-        return $this->user->hasRole(Role::ADMIN);
+        return false;
         //
     }
 
@@ -48,7 +55,7 @@ class PersonPolicy
             return true;
         }
 
-        return $user->hasRole([Role::ADMIN, Role::TRAINER, Role::MENTOR, Role::VC]);
+        return $user->hasRole([Role::TRAINER, Role::MENTOR, Role::VC]);
     }
 
     /**
@@ -60,7 +67,7 @@ class PersonPolicy
      */
     public function delete(Person $user, Person $person)
     {
-        return $this->user->hasRole(Role::ADMIN);
+        return false;
     }
 
     /*
@@ -70,10 +77,6 @@ class PersonPolicy
      */
 
      public function password(Person $user, Person $person) {
-         if ($user->id == $person->id) {
-             return true;
-         }
-
-         return $user->hasRole(Role::ADMIN);
+         return ($user->id == $person->id);
      }
 }

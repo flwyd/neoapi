@@ -20,9 +20,7 @@ class TimesheetController extends ApiHouseController
             'person_id' => 'sometimes|numeric'
         ]);
 
-        if ($query['person_id'] != $this->user->id) {
-            // TODO role check
-        }
+        $this->authorize('index', [ Timesheet::class, $query['person_id'] ]);
 
         return $this->jsonApi(Timesheet::findForQuery($query), false);
     }
