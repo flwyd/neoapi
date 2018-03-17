@@ -14,6 +14,7 @@ use App\Models\Timesheet;
 use App\Models\PersonLanguage;
 use App\Models\PersonRole;
 use App\Models\PersonYearInfo;
+use App\Models\Photo;
 use App\Models\Role;
 
 class PersonController extends ApiHouseController
@@ -53,6 +54,14 @@ class PersonController extends ApiHouseController
         $person->years_rangered = Timesheet::yearsRangered($personId);
         $person->unread_message_count = PersonMessage::countUnread($personId);
         $person->languages = PersonLanguage::retrieveForPerson($personId);
+
+        $urls = Photo::imagesUrl($personId);
+
+        if (isset($urls['photo_url'])) {
+            $person->photo_url = $urls['photo_url'];
+        }
+
+        error_log('PHOTO '. $person->photo_url);
 
         return $this->jsonApi($person);
     }
@@ -94,7 +103,7 @@ class PersonController extends ApiHouseController
     {
         $person = $this->findPerson($id);
         $this->authorize('delete', $person);
-        $this->log('person', 'delete', 'Person deletedd');
+        $this->log('person', 'delete', 'Person deleted');
     }
 
     /*

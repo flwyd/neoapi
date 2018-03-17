@@ -21,6 +21,7 @@ class PersonFilter
         'user_authorized',
         'date_verified',
         'create_date',
+        'photo_url'
     ];
 
     const ROLES_FIELDS = [

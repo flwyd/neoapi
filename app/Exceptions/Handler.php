@@ -74,7 +74,8 @@ class Handler extends ExceptionHandler
             }
 
             if ($e instanceof \Illuminate\Auth\Access\AuthorizationException) {
-                return JsonApi::errorResponse(response(), 403, 'You are not authorized for that action.');
+                //error_log("Authorization backtrack ".$e->getTraceAsString());
+                return JsonApi::errorResponse(response(), 403, 'Not authorized.');
             }
 
             if ($this->isHttpException($e)) {

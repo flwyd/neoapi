@@ -123,14 +123,15 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
     protected $appends = [
         'years_rangered',
         'unread_message_count',
-        'roles'
+        'roles',
+        'photo_url'
     ];
 
     /*
      * The years rangered (computed)
      * @var number
      */
-        public $years_rangered;
+     public $years_rangered;
 
     /*
      * Unread message count (computed)
@@ -152,6 +153,12 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
      */
 
     public $languages;
+
+    /*
+     * holds the URL to the person's photo/mugshot
+     */
+
+     public $photo_url;
 
     /**
       * Get the identifier that will be stored in the subject claim of the JWT.
@@ -351,4 +358,9 @@ class Person extends ApihouseModel implements JWTSubject, AuthenticatableContrac
     public function getYearsRangeredAttribute() {
         return $this->years_rangered;
     }
+
+    public function getPhotoUrlAttribute() {
+        return $this->photo_url;
+    }
+
 }
