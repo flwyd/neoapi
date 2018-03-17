@@ -12,7 +12,6 @@ class SchedulePolicy
     use HandlesAuthorization;
 
     public function before(Person $user) {
-        error_log("HIT HERE");
         if ($user->hasRole([Role::MANAGE, Role::ADMIN])) {
             return true;
         }
@@ -27,7 +26,6 @@ class SchedulePolicy
      */
     public function index(Person $user, Person $person)
     {
-        error_log("Looking at ".json_encode($user)." -> ".json_encode($person));
         return ($user->id == $person->id);
     }
 

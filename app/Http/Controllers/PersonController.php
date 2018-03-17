@@ -61,7 +61,6 @@ class PersonController extends ApiHouseController
             $person->photo_url = $urls['photo_url'];
         }
 
-        error_log('PHOTO '. $person->photo_url);
 
         return $this->jsonApi($person);
     }
@@ -83,7 +82,6 @@ class PersonController extends ApiHouseController
             return $this->errorJsonApi($person);
         }
 
-        error_log("PERSON LANGUAGE ".json_encode($person->languages));
         if ($person->languages !== null) {
             PersonLanguage::updateForPerson($id, $person->languages);
         }

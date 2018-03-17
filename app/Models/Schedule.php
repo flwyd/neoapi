@@ -24,6 +24,8 @@ class Schedule extends ApihouseModel
         'slot_id',
         'slot_begins',
         'slot_ends',
+        'slot_begins_time',
+        'slot_ends_time',
         'slot_duration',
         'slot_description',
         'slot_signed_up',
@@ -213,16 +215,16 @@ class Schedule extends ApihouseModel
         return ($this->slot_ends_time && Carbon::parse($this->slot_ends)->lt(Carbon::now()));
     }
 
-/*    public function getSlotBeginsAttribute()
+    public function getSlotBeginsTimeAttribute()
     {
-        return DateHelper::formatShift($this->slot_begins_time);
+        return Carbon::parse($this->slot_begins)->timestamp;
     }
 
-    public function getSlotEndsAttribute()
+    public function getSlotEndsTimeAttribute()
     {
-        return DateHelper::formatShift($this->slot_ends_time);
+        return Carbon::parse($this->slot_ends)->timestamp;
     }
-*/
+
     public function getSlotDurationAttribute()
     {
         return Carbon::parse($this->slot_ends)->diffInSeconds(Carbon::parse($this->slot_begins));

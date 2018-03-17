@@ -90,7 +90,6 @@ abstract class ApihouseModel extends Model implements AuditableContract
 
     public function saveWithoutValidation($options = []) {
         if (!$this->isDirty()) {
-            error_log("is not dirty");
             return true;
         }
 
