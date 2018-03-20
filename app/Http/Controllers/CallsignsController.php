@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ApihouseController;
+use App\Http\Controllers\ApiHouseController;
 use App\Models\Person;
 
-class CallsignsController extends ApihouseController
+class CallsignsController extends ApiHouseController
 {
 
     public function index() {

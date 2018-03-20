@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\ApihouseController;
+use App\Http\Controllers\ApiHouseController;
 
 use App\Models\Slot;
 use App\Models\PersonSlot;
 
-class SlotController extends ApihouseController
+class SlotController extends ApiHouseController
 {
     /**
      * Display a listing of the resource.

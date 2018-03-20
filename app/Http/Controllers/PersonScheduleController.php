@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Controllers\ApihouseController;
 use App\Models\Schedule;
 use App\Models\Person;
 use App\Models\Role;
 use App\Models\Slot;
 
-class PersonScheduleController extends ApihouseController
+use Illuminate\Http\Request;
+use App\Http\Controllers\ApiHouseController;
+
+class PersonScheduleController extends ApiHouseController
 {
     /**
      * Return an array of PesronSchedule for a given person & year

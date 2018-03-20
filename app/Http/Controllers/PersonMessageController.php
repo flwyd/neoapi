@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\ApihouseController;
+use App\Http\Controllers\ApiHouseController;
 use App\Models\Person;
 use App\Models\PersonMessage;
 use App\Models\Role;
 
-class PersonMessageController extends ApihouseController
+class PersonMessageController extends ApiHouseController
 {
     /**
      * Display a listing of the resource.

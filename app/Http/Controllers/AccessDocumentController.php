@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AccessDocument;
 use App\Http\Controllers\ApiHouseController;
 
-class AccessDocumentController extends ApihouseController
+class AccessDocumentController extends ApiHouseController
 {
     /**
      * Display a listing of the resource.
