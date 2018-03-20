@@ -221,7 +221,7 @@ configureBoolean(
 // Tickets, Vehicle Passes, Work Access Passes
 configureBoolean(
     'TicketsAndStuffEnable',
-    FALSE,
+    TRUE,
     'RANGER_CLUBHOUSE_TAS_ENABLE'
 );  // Menu item
 configureBoolean(
@@ -231,7 +231,7 @@ configureBoolean(
 );  // Menu item for prospectives and alphas
 configureString(
     'TAS_SubmitDate',
-    '2017-07-16 23:59:00',
+    '2018-07-16 23:59:00',
     'RANGER_CLUBHOUSE_TAS_SUBMIT_DATE'
 );
 configureString(

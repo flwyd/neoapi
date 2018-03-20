@@ -35,6 +35,7 @@ Route::group([
     'middleware' => 'api',
 ], function ($router) {
 
+    Route::resource('access-document', 'AccessDocumentController');
     Route::get('callsigns', 'CallsignsController@index');
 
     Route::resource('timesheet', 'TimesheetController');
