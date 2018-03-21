@@ -6,7 +6,6 @@ class Photo {
 
     const MUGSHOT_PATH = 'images/mugshots/id-%05u.jpg';
     const THUMBNAIL_PATH = 'images/mugshots/thumbs/thumb-%05u.jpg';
-
     const ASSET_DIR = 'public';
 
     public static function imagesUrl($personId) {
