@@ -149,7 +149,7 @@ class Schedule extends ApihouseModel
             }
 
             if ($slot->signed_up >= $slot->max) {
-                if ($force) {
+                if (!$force) {
                     throw new ScheduleException('full');
                 }
 
