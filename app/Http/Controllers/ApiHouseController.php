@@ -112,7 +112,7 @@ class ApiHouseController extends Controller
 
     public function log($area, $event, $message, $data=null, $targetPersonId=null) {
         ActionLog::record(
-            ($this->user ? $this->user->id : null),
+            $this->user,
             $area,
             $event,
             $message,

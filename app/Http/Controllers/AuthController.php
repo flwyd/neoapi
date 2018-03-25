@@ -37,14 +37,15 @@ class AuthController extends Controller
         ]);
 
         $actionData = [
-            'ip'    => request()->ip(),
-            'user_agent'    => request()->userAgent(),
+            'ip'         => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'email'      => $credentials['identification']
         ];
 
         $person = Person::findForAuthentication($credentials);
 
         if (!$person) {
-            ActionLog::record(null, 'auth', 'failed', 'Password incorrect', $actionData);
+            ActionLog::record(null, 'auth', 'failed', 'Credentials incorrect', $actionData);
             return JsonApi::errorResponse(response(), 401, 'The email and/or password is incorrect.');
         }
 
@@ -58,7 +59,7 @@ class AuthController extends Controller
             return JsonApi::errorResponse(response(), 403, 'The account is temporarily disabled from using the Clubhouse.');
         }
 
-        ActionLog::record($person->id, 'auth', 'login', 'Person logged in.', $actionData);
+        ActionLog::record($person, 'auth', 'login', 'User login', $actionData);
         return $this->respondWithToken(auth()->login($person), $person);
     }
 
@@ -69,9 +70,10 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        ActionLog::record($this->user, 'auth', 'logout', 'User logout');
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['status' => 'success']);
     }
 
     /**
@@ -90,9 +92,22 @@ class AuthController extends Controller
             'identification' => 'required|email'
         ]);
 
-        $person = Person::findEmailOrFail($data['identification']);
+        $action = [
+            'ip'            => request()->ip(),
+            'user_agent'    => request()->userAgent(),
+            'email'         => $data['identification']
+        ];
+
+        try {
+            $person = Person::findEmailOrFail($data['identification']);
+        } catch (\Exception $e) {
+            ActionLog::record(null, 'auth', 'password-reset-fail', 'Password reset failed', $action);
+            throw $e;
+        }
 
         $resetPassword = $person->createResetPassword();
+
+        ActionLog::record($person, 'auth', 'password-reset-success', 'Password reset request', $action);
 
         // TODO - load admin email from configuration
         Mail::to($person->email)->send(new ResetPassword($resetPassword, 'rangers@burningman.org'));
