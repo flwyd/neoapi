@@ -115,7 +115,7 @@ class AuthController extends Controller
         return response()->json([ 'status' => 'success' ]);
     }
     /**
-     * Get the token array structure.
+     * Get the JWT token array structure.
      *
      * @param  string $token
      *
