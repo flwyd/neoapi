@@ -48,6 +48,7 @@ class PersonController extends ApiHouseController
      */
     public function show(Person $person)
     {
+        $this->authorize('view', $person);
         $personId = $person->id;
         $person->retrieveRoles();
 
@@ -62,7 +63,7 @@ class PersonController extends ApiHouseController
         }
 
 
-        return $this->jsonApi($person);
+        return $this->jsonApi($person, true);
     }
 
     /**

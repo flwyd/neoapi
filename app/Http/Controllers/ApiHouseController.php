@@ -59,7 +59,7 @@ class ApiHouseController extends Controller
         return response()->json($data, $status);
     }
 
-    public function jsonApi($resource, $filter=true)
+    public function jsonApi($resource, $filter=false)
     {
         $authenicatedUser = $filter ? $this->user : null;
         if (is_iterable($resource)) {

@@ -51,4 +51,5 @@ Route::group([
     Route::get('person/{person}/yearinfo', 'PersonController@yearInfo');
     Route::resource('person', 'PersonController', [ 'only' => [ 'index','show','store','update','destroy' ]]);
 
+    Route::resource('position', 'PositionController');
 });
