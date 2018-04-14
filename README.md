@@ -15,7 +15,7 @@ You will need the following things properly installed on your computer.
 * `cd neoapi`
 * `composer install`
 * Copy .env.clubhouse to .env and set the configuration appropriately
-* `php artisan migration` (needed to have database auditing)
+* `php artisan migrate` (needed to have database auditing)
 
 ## Running / Development
 
