@@ -8,6 +8,7 @@ You will need the following things properly installed on your computer.
 
 * [Git](https://git-scm.com/)
 * [PHP >= 7.1.3](https://php.net)
+* [MySQL >= 5.7](https://www.mysql.com/downloads/)
 
 ## Installation
 
