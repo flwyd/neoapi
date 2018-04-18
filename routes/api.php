@@ -37,6 +37,7 @@ Route::group([
 
     Route::resource('access-document', 'AccessDocumentController');
     Route::get('callsigns', 'CallsignsController@index');
+    Route::get('handles', 'HandleController@index');
 
     Route::resource('timesheet', 'TimesheetController');
 
